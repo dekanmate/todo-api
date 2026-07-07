@@ -3,6 +3,7 @@
 using ToDoApi.Models;
 using ToDoApi.DTOs;
 using ToDoApi.Services;
+using ToDoApi.Mappers;
 
 namespace ToDoApi.Controllers;
 
@@ -15,16 +16,6 @@ public class TodosController : ControllerBase
     public TodosController(ITodoService todoService)
     {
         _todoService = todoService;
-    }
-
-    private TodoResponseDto MapToDto(TodoItem todo)
-    {
-        return new TodoResponseDto
-        {
-            Id = todo.Id,
-            Title = todo.Title,
-            IsCompleted = todo.IsCompleted
-        };
     }
 
     [HttpGet]
@@ -40,7 +31,7 @@ public class TodosController : ControllerBase
     {
         var todo = await _todoService.Create(todoDto);
 
-        return Ok(MapToDto(todo));
+        return Ok(todo.ToDto());
     }
 
     [HttpPut("{id}")]
@@ -48,7 +39,7 @@ public class TodosController : ControllerBase
     {
         var todo = await _todoService.Update(id, updatedTodoDto);
 
-        return todo != null ? Ok(MapToDto(todo)) : NotFound();
+        return todo != null ? Ok(todo.ToDto()) : NotFound();
     }
 
     [HttpDelete("{id}")]
