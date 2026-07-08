@@ -21,7 +21,7 @@ public class TodosController : ControllerBase
     {
         var responseTodo = await _todoService.GetById(id);
 
-        return responseTodo != null ? Ok(responseTodo) : NotFound();
+        return Ok(responseTodo);
     }
 
     [HttpGet]
@@ -49,7 +49,7 @@ public class TodosController : ControllerBase
     {
         var responseTodo = await _todoService.Update(id, updatedTodoDto);
 
-        return responseTodo != null ? Ok(responseTodo) : NotFound();
+        return Ok(responseTodo);
     }
 
     [HttpDelete("{id}")]
@@ -57,6 +57,6 @@ public class TodosController : ControllerBase
     {
         bool deleted = await _todoService.Delete(id);
 
-        return deleted ? NoContent() : NotFound();
+        return NoContent();
     }
 }

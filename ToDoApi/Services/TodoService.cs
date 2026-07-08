@@ -2,6 +2,7 @@
 using ToDoApi.Mappers;
 using ToDoApi.Models;
 using ToDoApi.Repositories;
+using ToDoApi.Exceptions;
 
 namespace ToDoApi.Services;
 
@@ -16,14 +17,17 @@ public class TodoService : ITodoService
 
     public async Task<ResponseTodoDto?> GetById(int id)
     {
-        var todo = await _repository.GetById(id);
+        TodoItem? todo = await _repository.GetById(id);
 
-        return todo?.ToDto();
+        if (todo == null)
+            throw new NotFoundException($"Todo with id {id} not found.");
+
+        return todo.ToDto();
     }
 
     public async Task<List<ResponseTodoDto>> GetAll()
     {
-        var todos = await _repository.GetAll();
+        List<TodoItem> todos = await _repository.GetAll();
 
         return todos.Select(t => t.ToDto()).ToList();
     }
@@ -36,7 +40,7 @@ public class TodoService : ITodoService
             IsCompleted = false
         };
 
-        var createdTodo = await _repository.Create(todo);
+        TodoItem createdTodo = await _repository.Create(todo);
 
         return createdTodo.ToDto();
     }
@@ -46,7 +50,7 @@ public class TodoService : ITodoService
         var todo = await _repository.GetById(id);
 
         if (todo == null)
-            return null;
+            throw new NotFoundException($"Todo with id {id} not found.");
 
         todo.Title = updatedTodoDto.Title;
         todo.IsCompleted = updatedTodoDto.IsCompleted;
@@ -58,10 +62,10 @@ public class TodoService : ITodoService
 
     public async Task<bool> Delete(int id)
     {
-        var todo = await _repository.GetById(id);
+        TodoItem? todo = await _repository.GetById(id);
 
         if (todo == null)
-            return false;
+            throw new NotFoundException($"Todo with id {id} not found.");
 
         return await _repository.Delete(todo);
     }

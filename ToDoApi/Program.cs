@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using ToDoApi.Data;
+using ToDoApi.Middleware;
 using ToDoApi.Repositories;
 using ToDoApi.Services;
-using ToDoApi.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +34,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Middleware
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
