@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using ToDoApi.Models;
 using ToDoApi.DTOs;
 using ToDoApi.Services;
-using ToDoApi.Mappers;
 
 namespace ToDoApi.Controllers;
 
@@ -18,28 +16,40 @@ public class TodosController : ControllerBase
         _todoService = todoService;
     }
 
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var responseTodo = await _todoService.GetById(id);
+
+        return responseTodo != null ? Ok(responseTodo) : NotFound();
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var todos = await _todoService.GetAll();
+        var responseTodos = await _todoService.GetAll();
 
-        return Ok(todos);
+        return Ok(responseTodos);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(TodoDto todoDto)
+    public async Task<IActionResult> Create(CreateTodoDto todoDto)
     {
-        var todo = await _todoService.Create(todoDto);
+        var responseTodo = await _todoService.Create(todoDto);
 
-        return Ok(todo.ToDto());
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = responseTodo.Id },
+            responseTodo
+        );
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, TodoDto updatedTodoDto)
+    public async Task<IActionResult> Update(int id, UpdateTodoDto updatedTodoDto)
     {
-        var todo = await _todoService.Update(id, updatedTodoDto);
+        var responseTodo = await _todoService.Update(id, updatedTodoDto);
 
-        return todo != null ? Ok(todo.ToDto()) : NotFound();
+        return responseTodo != null ? Ok(responseTodo) : NotFound();
     }
 
     [HttpDelete("{id}")]

@@ -6,9 +6,10 @@ namespace ToDoApi.Services
 {
     public interface ITodoService
     {
-        public Task<List<TodoResponseDto>> GetAll();
-        public Task<TodoItem> Create(TodoDto todoDto);
-        public Task<TodoItem?> Update(int id, TodoDto updatedTodoDto);
+        public Task<ResponseTodoDto?> GetById(int id);
+        public Task<List<ResponseTodoDto>> GetAll();
+        public Task<ResponseTodoDto> Create(CreateTodoDto todoDto);
+        public Task<ResponseTodoDto?> Update(int id, UpdateTodoDto updatedTodoDto);
         public Task<bool> Delete(int id);
     }
 }

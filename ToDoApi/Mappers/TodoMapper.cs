@@ -5,9 +5,9 @@ namespace ToDoApi.Mappers
 {
     public static class TodoMapper
     {
-        public static TodoResponseDto ToDto(this TodoItem todo)
+        public static ResponseTodoDto ToDto(this TodoItem todo)
         {
-            return new TodoResponseDto
+            return new ResponseTodoDto
             {
                 Id = todo.Id,
                 Title = todo.Title,

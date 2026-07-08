@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ToDoApi.Data;
 using ToDoApi.DTOs;
+using ToDoApi.Mappers;
 using ToDoApi.Models;
 
 namespace ToDoApi.Services;
@@ -14,10 +15,22 @@ public class TodoService : ITodoService
         _context = context;
     }
 
-    public async Task<List<TodoResponseDto>> GetAll()
+    public async Task<ResponseTodoDto?> GetById(int id)
     {
         return await _context.Todos
-            .Select(t => new TodoResponseDto
+            .Where(t => t.Id == id)
+            .Select(t => new ResponseTodoDto
+            {
+                Title = t.Title,
+                IsCompleted = t.IsCompleted
+            })
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<List<ResponseTodoDto>> GetAll()
+    {
+        return await _context.Todos
+            .Select(t => new ResponseTodoDto
             {
                 Id = t.Id,
                 Title = t.Title,
@@ -26,21 +39,21 @@ public class TodoService : ITodoService
             .ToListAsync();
     }
 
-    public async Task<TodoItem> Create(TodoDto todoDto)
+    public async Task<ResponseTodoDto> Create(CreateTodoDto todoDto)
     {
         var todo = new TodoItem
         {
             Title = todoDto.Title,
-            IsCompleted = todoDto.IsCompleted
+            IsCompleted = false
         };
 
         _context.Todos.Add(todo);
         await _context.SaveChangesAsync();
 
-        return todo;
+        return todo.ToDto();
     }
 
-    public async Task<TodoItem?> Update(int id, TodoDto updatedTodoDto) 
+    public async Task<ResponseTodoDto?> Update(int id, UpdateTodoDto updatedTodoDto) 
     {
         var todo = await _context.Todos.FirstOrDefaultAsync(t => t.Id == id);
 
@@ -52,7 +65,7 @@ public class TodoService : ITodoService
 
         await _context.SaveChangesAsync();
 
-        return todo;
+        return todo.ToDto();
     }
     public async Task<bool> Delete(int id) 
     {
