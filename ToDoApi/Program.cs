@@ -1,12 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using ToDoApi.Data;
+using ToDoApi.Repositories;
 using ToDoApi.Services;
+using ToDoApi.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Services to the container.
 builder.Services.AddControllers();
 builder.Services.AddScoped<ITodoService, TodoService>();
+builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 
 // Configure SQLite database
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=todo.db"));
