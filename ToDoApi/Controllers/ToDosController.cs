@@ -16,6 +16,11 @@ public class TodosController : ControllerBase
         _todoService = todoService;
     }
 
+    /// <summary>
+    /// Returns a todo item by its ID.
+    /// </summary>
+    /// <param name="id">The ID of the todo item.</param>
+    /// <returns>The requested todo item.</returns>
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(ResponseTodoDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status404NotFound)]
@@ -26,6 +31,10 @@ public class TodosController : ControllerBase
         return Ok(responseTodo);
     }
 
+    /// <summary>
+    /// Returns all todo items.
+    /// </summary>
+    /// <returns>A list of todo items.</returns>
     [HttpGet]
     [ProducesResponseType(typeof(List<ResponseTodoDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
@@ -35,6 +44,11 @@ public class TodosController : ControllerBase
         return Ok(responseTodos);
     }
 
+    /// <summary>
+    /// Creates a new todo item.
+    /// </summary>
+    /// <param name="todoDto">The data required to create a todo item.</param>
+    /// <returns>The created todo item.</returns>
     [HttpPost]
     [ProducesResponseType(typeof(ResponseTodoDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -49,6 +63,12 @@ public class TodosController : ControllerBase
         );
     }
 
+    /// <summary>
+    /// Updates an existing todo item.
+    /// </summary>
+    /// <param name="id">The ID of the todo item.</param>
+    /// <param name="updatedTodoDto">The updated todo data.</param>
+    /// <returns>The updated todo item.</returns>
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(ResponseTodoDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status404NotFound)]
@@ -60,6 +80,10 @@ public class TodosController : ControllerBase
         return Ok(responseTodo);
     }
 
+    /// <summary>
+    /// Deletes a todo item.
+    /// </summary>
+    /// <param name="id">The ID of the todo item.</param>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status404NotFound)]
