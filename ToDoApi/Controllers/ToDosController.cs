@@ -17,6 +17,8 @@ public class TodosController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(ResponseTodoDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(int id)
     {
         var responseTodo = await _todoService.GetById(id);
@@ -25,6 +27,7 @@ public class TodosController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(List<ResponseTodoDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
         var responseTodos = await _todoService.GetAll();
@@ -33,6 +36,8 @@ public class TodosController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(ResponseTodoDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create(CreateTodoDto todoDto)
     {
         var responseTodo = await _todoService.Create(todoDto);
@@ -45,6 +50,9 @@ public class TodosController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [ProducesResponseType(typeof(ResponseTodoDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Update(int id, UpdateTodoDto updatedTodoDto)
     {
         var responseTodo = await _todoService.Update(id, updatedTodoDto);
@@ -53,6 +61,8 @@ public class TodosController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(int id)
     {
         bool deleted = await _todoService.Delete(id);
