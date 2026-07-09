@@ -11,8 +11,11 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<ITodoService, TodoService>();
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 
-// Configure SQLite database
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=todo.db"));
+// Configure PostgreSQL database
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
